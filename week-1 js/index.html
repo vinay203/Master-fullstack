@@ -1,11 +1,712 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <script src="script.js"></script>
-</body>
-</html>
+import React, { useState, useRef, useEffect } from 'react';
+import { Send, MapPin, MessageCircle, Phone, Star, Navigation, ChevronDown, Loader, AlertCircle, X, Clock, DollarSign, CheckCircle, MapPinIcon } from 'lucide-react';
+// FIX 1: Added LoadScript to the imports
+import { GoogleMap, MarkerF, LoadScript } from '@react-google-maps/api';
+
+const GOOGLE_MAPS_API_KEY = 'AIzaSyBRRyattueT_UK8R62hGEISk8uGgFJ8MAQ'; 
+
+const MOCK_WORKERS = [
+  {
+    id: 1,
+    name: 'Ramesh Kumar',
+    service: 'electrical repair',
+    category: 'Electrical',
+    description: 'Licensed electrician with 8 years experience',
+    rating: 4.8,
+    reviews: 127,
+    price: 300,
+    location: { lat: 17.3850, lng: 78.4867 },
+    distance: 0.8,
+    verified: true,
+    responseTime: '15 min',
+    image: '🔌',
+    skills: ['Wiring', 'Panel Repair', 'AC Installation'],
+    available: true,
+    completedJobs: 234,
+  },
+  {
+    id: 2,
+    name: 'Priya Sharma',
+    service: 'plumbing',
+    category: 'Plumbing',
+    description: 'Expert plumber, emergency calls available',
+    rating: 4.9,
+    reviews: 89,
+    price: 250,
+    location: { lat: 17.3860, lng: 78.4890 },
+    distance: 1.2,
+    verified: true,
+    responseTime: '20 min',
+    image: '🔧',
+    skills: ['Leakage Repair', 'Installation', 'Drainage'],
+    available: true,
+    completedJobs: 156,
+  },
+  {
+    id: 3,
+    name: 'Arjun Singh',
+    service: 'carpentry',
+    category: 'Carpentry',
+    description: 'Custom woodwork and furniture repair',
+    rating: 4.7,
+    reviews: 64,
+    price: 400,
+    location: { lat: 17.3800, lng: 78.4800 },
+    distance: 1.5,
+    verified: true,
+    responseTime: '30 min',
+    image: '🪵',
+    skills: ['Furniture', 'Doors', 'Shelves'],
+    available: true,
+    completedJobs: 198,
+  },
+  {
+    id: 4,
+    name: 'Fatima Khan',
+    service: 'cleaning',
+    category: 'Cleaning',
+    description: 'Professional home cleaning and deep cleaning',
+    rating: 4.6,
+    reviews: 156,
+    price: 200,
+    location: { lat: 17.3900, lng: 78.4950 },
+    distance: 0.5,
+    verified: true,
+    responseTime: '10 min',
+    image: '✨',
+    skills: ['Deep Clean', 'Carpet', 'Windows'],
+    available: true,
+    completedJobs: 312,
+  },
+  {
+    id: 5,
+    name: 'Vijay Patel',
+    service: 'appliance repair',
+    category: 'Appliances',
+    description: 'AC, fridge, washing machine specialist',
+    rating: 4.8,
+    reviews: 112,
+    price: 350,
+    location: { lat: 17.3750, lng: 78.4750 },
+    distance: 2.1,
+    verified: true,
+    responseTime: '25 min',
+    image: '❄️',
+    skills: ['AC', 'Refrigerator', 'Washing Machine'],
+    available: true,
+    completedJobs: 267,
+  },
+  {
+    id: 6,
+    name: 'Kavi Reddy',
+    service: 'painting',
+    category: 'Painting',
+    description: 'Interior and exterior painting expert',
+    rating: 4.5,
+    reviews: 78,
+    price: 280,
+    location: { lat: 17.3920, lng: 78.4700 },
+    distance: 2.3,
+    verified: true,
+    responseTime: '20 min',
+    image: '🎨',
+    skills: ['Interior', 'Exterior', 'Texture'],
+    available: true,
+    completedJobs: 145,
+  },
+  {
+    id: 7,
+    name: 'Suresh Kumar',
+    service: 'masonry',
+    category: 'Masonry',
+    description: 'Brickwork, tiling and concrete specialist',
+    rating: 4.7,
+    reviews: 92,
+    price: 320,
+    location: { lat: 17.3650, lng: 78.4950 },
+    distance: 1.8,
+    verified: true,
+    responseTime: '30 min',
+    image: '🧱',
+    skills: ['Brickwork', 'Tiling', 'Concrete'],
+    available: true,
+    completedJobs: 203,
+  },
+];
+
+const WORKFORCE_CATEGORIES = [
+  { name: 'Electrical', icon: '🔌', color: '#FF6B6B' },
+  { name: 'Plumbing', icon: '🔧', color: '#4ECDC4' },
+  { name: 'Carpentry', icon: '🪵', color: '#95E1D3' },
+  { name: 'Cleaning', icon: '✨', color: '#FFE66D' },
+  { name: 'Appliances', icon: '❄️', color: '#95BDFF' },
+  { name: 'Painting', icon: '🎨', color: '#F8B500' },
+  { name: 'Masonry', icon: '🧱', color: '#E0B0FF' },
+];
+
+const WorkerCard = ({ worker, onSelect }) => (
+  <div
+    onClick={() => onSelect(worker)}
+    style={{
+      background: 'white',
+      borderRadius: '12px',
+      overflow: 'hidden',
+      cursor: 'pointer',
+      transition: 'all 0.3s ease',
+      boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+      border: '1px solid #e0e0e0',
+      minHeight: '280px',
+      display: 'flex',
+      flexDirection: 'column',
+    }}
+    onMouseEnter={(e) => {
+      e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.15)';
+      e.currentTarget.style.transform = 'translateY(-4px)';
+    }}
+    onMouseLeave={(e) => {
+      e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+      e.currentTarget.style.transform = 'translateY(0)';
+    }}
+  >
+    <div style={{ padding: '16px', borderBottom: '1px solid #f0f0f0' }}>
+      <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start', marginBottom: '12px' }}>
+        <div
+          style={{
+            width: '56px',
+            height: '56px',
+            borderRadius: '8px',
+            background: '#f5f5f5',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '28px',
+            flexShrink: 0,
+          }}
+        >
+          {worker.image}
+        </div>
+        <div style={{ flex: 1 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
+            <p style={{ margin: 0, fontWeight: '700', fontSize: '15px', color: '#1a1a1a' }}>
+              {worker.name}
+            </p>
+            {worker.verified && <CheckCircle size={16} color="#34C759" />}
+          </div>
+          <p style={{ margin: '0 0 4px', fontSize: '13px', color: '#666' }}>
+            {worker.service}
+          </p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <Star size={14} fill="#FFB800" color="#FFB800" />
+            <span style={{ fontSize: '13px', fontWeight: '600', color: '#1a1a1a' }}>
+              {worker.rating}
+            </span>
+            <span style={{ fontSize: '12px', color: '#999' }}>
+              ({worker.reviews})
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style={{ padding: '0 16px', marginBottom: '12px' }}>
+      <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+        {worker.skills.slice(0, 2).map((skill, i) => (
+          <span
+            key={i}
+            style={{
+              fontSize: '11px',
+              background: '#f5f5f5',
+              color: '#666',
+              padding: '4px 8px',
+              borderRadius: '4px',
+              fontWeight: '500',
+            }}
+          >
+            {skill}
+          </span>
+        ))}
+      </div>
+    </div>
+
+    <div style={{ padding: '0 16px', marginBottom: '12px', flex: 1 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+        <div>
+          <p style={{ margin: '0 0 4px', fontSize: '11px', color: '#999', fontWeight: '500' }}>
+            Distance
+          </p>
+          <p style={{ margin: 0, fontSize: '14px', fontWeight: '600', color: '#1a1a1a' }}>
+            {worker.distance} km
+          </p>
+        </div>
+        <div>
+          <p style={{ margin: '0 0 4px', fontSize: '11px', color: '#999', fontWeight: '500' }}>
+            Response
+          </p>
+          <p style={{ margin: 0, fontSize: '14px', fontWeight: '600', color: '#1a1a1a' }}>
+            {worker.responseTime}
+          </p>
+        </div>
+        <div>
+          <p style={{ margin: '0 0 4px', fontSize: '11px', color: '#999', fontWeight: '500' }}>
+            Rate
+          </p>
+          <p style={{ margin: 0, fontSize: '14px', fontWeight: '600', color: '#FF6B6B' }}>
+            ₹{worker.price}/hr
+          </p>
+        </div>
+        <div>
+          <p style={{ margin: '0 0 4px', fontSize: '11px', color: '#999', fontWeight: '500' }}>
+            Jobs
+          </p>
+          <p style={{ margin: 0, fontSize: '14px', fontWeight: '600', color: '#1a1a1a' }}>
+            {worker.completedJobs}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div style={{ padding: '12px 16px', borderTop: '1px solid #f0f0f0', display: 'flex', gap: '8px' }}>
+      <button
+        style={{
+          flex: 1,
+          padding: '10px',
+          border: '1px solid #ddd',
+          background: '#f5f5f5',
+          borderRadius: '6px',
+          cursor: 'pointer',
+          fontSize: '13px',
+          fontWeight: '600',
+          color: '#1a1a1a',
+          transition: 'all 0.2s',
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.background = '#e0e0e0';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.background = '#f5f5f5';
+        }}
+      >
+        📞 Call
+      </button>
+      <button
+        style={{
+          flex: 1,
+          padding: '10px',
+          border: '1px solid #FF6B6B',
+          background: '#FF6B6B',
+          borderRadius: '6px',
+          cursor: 'pointer',
+          fontSize: '13px',
+          fontWeight: '600',
+          color: 'white',
+          transition: 'all 0.2s',
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.background = '#FF5252';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.background = '#FF6B6B';
+        }}
+      >
+        💬 Chat
+      </button>
+    </div>
+  </div>
+);
+
+export default function AddaEnhanced() {
+  const [view, setView] = useState('home');
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedWorker, setSelectedWorker] = useState(null);
+  const [query, setQuery] = useState('');
+  const [workers, setWorkers] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
+  const [chatMessages, setChatMessages] = useState([
+    { text: 'Hi! What service are you looking for?', isUser: false }
+  ]);
+  const [chatInput, setChatInput] = useState('');
+  const chatEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [chatMessages]);
+
+  const handleCategoryClick = (category) => {
+    setSelectedCategory(category);
+    setQuery(category.name);
+    searchWorkers(category.name);
+  };
+
+  const searchWorkers = (searchQuery = query) => {
+    if (!searchQuery.trim()) return;
+    
+    setLoading(true);
+    setHasSearched(true);
+
+    setTimeout(() => {
+      const filtered = MOCK_WORKERS.filter(
+        (w) =>
+          w.service.includes(searchQuery.toLowerCase()) ||
+          w.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          w.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+
+      setWorkers(filtered.length > 0 ? filtered : MOCK_WORKERS);
+      setLoading(false);
+    }, 600);
+  };
+
+  const handleSelectWorker = (worker) => {
+    setSelectedWorker(worker);
+    setView('booking');
+  };
+
+  const handleChatSend = () => {
+    if (!chatInput.trim()) return;
+    
+    setChatMessages((prev) => [...prev, { text: chatInput, isUser: true }]);
+    setChatInput('');
+
+    setTimeout(() => {
+      setChatMessages((prev) => [
+        ...prev,
+        { text: 'Thanks for your message! I\'ll respond shortly.', isUser: false },
+      ]);
+    }, 800);
+  };
+
+  if (view === 'home') {
+    return (
+      <div style={{ display: 'flex', height: '100vh', background: '#fff' }}>
+        <div
+          style={{
+            width: hasSearched ? '400px' : '100%',
+            background: 'white',
+            overflow: 'auto',
+            transition: 'all 0.3s ease',
+            borderRight: hasSearched ? '1px solid #e0e0e0' : 'none',
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          <div style={{ padding: '20px', borderBottom: '1px solid #e0e0e0' }}>
+            <h1
+              style={{
+                fontSize: '28px',
+                fontWeight: '700',
+                margin: '0 0 4px',
+                color: '#FF6B6B',
+              }}
+            >
+              adda
+            </h1>
+            <p style={{ margin: 0, fontSize: '13px', color: '#666' }}>
+              Find skilled workers near you
+            </p>
+          </div>
+
+          <div style={{ padding: '16px' }}>
+            <div style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
+              <input
+                type="text"
+                placeholder="Search by service..."
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && searchWorkers()}
+                style={{
+                  flex: 1,
+                  padding: '10px 12px',
+                  border: '1px solid #ddd',
+                  borderRadius: '6px',
+                  fontSize: '14px',
+                  fontFamily: 'inherit',
+                }}
+              />
+              <button
+                onClick={() => searchWorkers()}
+                disabled={loading}
+                style={{
+                  padding: '10px 16px',
+                  background: '#FF6B6B',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  fontWeight: '600',
+                  fontSize: '14px',
+                  transition: 'all 0.2s',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#FF5252';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = '#FF6B6B';
+                }}
+              >
+                {loading ? '⏳' : '🔍'}
+              </button>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px' }}>
+              {WORKFORCE_CATEGORIES.map((cat) => (
+                <button
+                  key={cat.name}
+                  onClick={() => handleCategoryClick(cat)}
+                  style={{
+                    padding: '12px',
+                    border: selectedCategory?.name === cat.name ? `2px solid ${cat.color}` : '1px solid #ddd',
+                    background: selectedCategory?.name === cat.name ? `${cat.color}15` : '#f5f5f5',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    fontSize: '12px',
+                    fontWeight: '600',
+                    color: '#1a1a1a',
+                    transition: 'all 0.2s',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = `${cat.color}20`;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = selectedCategory?.name === cat.name ? `${cat.color}15` : '#f5f5f5';
+                  }}
+                >
+                  <div style={{ fontSize: '20px', marginBottom: '4px' }}>
+                    {cat.icon}
+                  </div>
+                  {cat.name}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div style={{ flex: 1, overflow: 'auto', padding: '16px' }}>
+            {hasSearched && workers.length > 0 ? (
+              <div>
+                <p style={{ margin: '0 0 12px', fontSize: '12px', color: '#666', fontWeight: '600' }}>
+                  {workers.length} service provider{workers.length !== 1 ? 's' : ''} found
+                </p>
+                <div style={{ display: 'grid', gap: '12px' }}>
+                  {workers.map((worker) => (
+                    <WorkerCard
+                      key={worker.id}
+                      worker={worker}
+                      onSelect={handleSelectWorker}
+                    />
+                  ))}
+                </div>
+              </div>
+            ) : hasSearched ? (
+              <div style={{ textAlign: 'center', paddingTop: '40px' }}>
+                <p style={{ fontSize: '40px', margin: '0 0 12px' }}>🔍</p>
+                <p style={{ margin: 0, color: '#999', fontSize: '14px' }}>
+                  No workers found. Try a different search.
+                </p>
+              </div>
+            ) : (
+              <div style={{ textAlign: 'center', paddingTop: '40px' }}>
+                <p style={{ fontSize: '40px', margin: '0 0 12px' }}>🏪</p>
+                <p style={{ margin: 0, color: '#999', fontSize: '14px' }}>
+                  Select a category or search to get started
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* FIX 3: Properly closed JSX tags for the Map and main container */}
+        {hasSearched && (
+          <div style={{ flex: 1, height: '100%' }}>
+            <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY}>
+              <GoogleMap
+                mapContainerStyle={{ width: '100%', height: '100%' }}
+                // FIX 2: Corrected 'workers.lenght' typo to 'workers.length'
+                center={
+                  workers.length > 0
+                    ? workers[0].location
+                    : { lat: 17.385, lng: 78.486 }
+                }
+                zoom={13}
+              >
+                {workers.map((worker) => (
+                  <MarkerF
+                    key={worker.id}
+                    position={worker.location}
+                    title={worker.name}
+                  />
+                ))}
+              </GoogleMap>
+            </LoadScript>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  if (view === 'booking' && selectedWorker) {
+    return (
+      <div style={{ minHeight: '100vh', background: '#f5f5f5', padding: '20px' }}>
+        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+          <button
+            onClick={() => {
+              setView('home');
+              setSelectedWorker(null);
+            }}
+            style={{
+              padding: '8px 12px',
+              background: 'transparent',
+              border: 'none',
+              color: '#FF6B6B',
+              cursor: 'pointer',
+              fontSize: '14px',
+              fontWeight: '600',
+              marginBottom: '20px',
+            }}
+          >
+            ← Back
+          </button>
+
+          <div style={{ background: 'white', borderRadius: '12px', padding: '24px', marginBottom: '20px' }}>
+            <div style={{ display: 'flex', gap: '20px', marginBottom: '24px' }}>
+              <div
+                style={{
+                  width: '100px',
+                  height: '100px',
+                  borderRadius: '12px',
+                  background: '#f0f0f0',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '48px',
+                }}
+              >
+                {selectedWorker.image}
+              </div>
+              <div style={{ flex: 1 }}>
+                <h2 style={{ margin: '0 0 8px', fontSize: '24px', fontWeight: '700', color: '#1a1a1a' }}>
+                  {selectedWorker.name}
+                </h2>
+                <p style={{ margin: '0 0 12px', color: '#666', fontSize: '14px' }}>
+                  {selectedWorker.service}
+                </p>
+                <div style={{ display: 'flex', gap: '16px', alignItems: 'center', marginBottom: '12px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <Star size={16} fill="#FFB800" color="#FFB800" />
+                    <span style={{ fontWeight: '600', fontSize: '14px' }}>
+                      {selectedWorker.rating}
+                    </span>
+                    <span style={{ color: '#999', fontSize: '13px' }}>
+                      ({selectedWorker.reviews} reviews)
+                    </span>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: '12px' }}>
+                  <button
+                    style={{
+                      padding: '10px 16px',
+                      background: '#f0f0f0',
+                      border: '1px solid #ddd',
+                      borderRadius: '6px',
+                      cursor: 'pointer',
+                      fontWeight: '600',
+                      fontSize: '13px',
+                    }}
+                  >
+                    📞 Call
+                  </button>
+                  <button
+                    onClick={() => setView('home')}
+                    style={{
+                      padding: '10px 16px',
+                      background: '#FF6B6B',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '6px',
+                      cursor: 'pointer',
+                      fontWeight: '600',
+                      fontSize: '13px',
+                    }}
+                  >
+                    💬 Chat
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div style={{ borderTop: '1px solid #e0e0e0', paddingTop: '20px' }}>
+              <h3 style={{ margin: '0 0 16px', fontSize: '14px', fontWeight: '600', color: '#1a1a1a' }}>
+                Details
+              </h3>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
+                <div>
+                  <p style={{ margin: '0 0 4px', fontSize: '12px', color: '#999', fontWeight: '500' }}>
+                    Distance
+                  </p>
+                  <p style={{ margin: 0, fontSize: '14px', fontWeight: '600' }}>
+                    {selectedWorker.distance} km
+                  </p>
+                </div>
+                <div>
+                  <p style={{ margin: '0 0 4px', fontSize: '12px', color: '#999', fontWeight: '500' }}>
+                    Response Time
+                  </p>
+                  <p style={{ margin: 0, fontSize: '14px', fontWeight: '600' }}>
+                    {selectedWorker.responseTime}
+                  </p>
+                </div>
+                <div>
+                  <p style={{ margin: '0 0 4px', fontSize: '12px', color: '#999', fontWeight: '500' }}>
+                    Hourly Rate
+                  </p>
+                  <p style={{ margin: 0, fontSize: '14px', fontWeight: '600', color: '#FF6B6B' }}>
+                    ₹{selectedWorker.price}/hour
+                  </p>
+                </div>
+                <div>
+                  <p style={{ margin: '0 0 4px', fontSize: '12px', color: '#999', fontWeight: '500' }}>
+                    Completed Jobs
+                  </p>
+                  <p style={{ margin: 0, fontSize: '14px', fontWeight: '600' }}>
+                    {selectedWorker.completedJobs}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button
+            style={{
+              width: '100%',
+              padding: '16px',
+              background: '#FF6B6B',
+              color: 'white',
+              border: 'none',
+              borderRadius: '8px',
+              fontSize: '16px',
+              fontWeight: '600',
+              cursor: 'pointer',
+              marginBottom: '12px',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = '#FF5252';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = '#FF6B6B';
+            }}
+          >
+            Book Service
+          </button>
+          <p style={{ textAlign: 'center', fontSize: '12px', color: '#999', margin: 0 }}>
+            Final price confirmed before service starts
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return null;
+}
