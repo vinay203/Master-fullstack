@@ -1,10 +1,4 @@
-const person = {
-    name: "Vinay",
-    age: 20,
-    city: "Hyderabad"
-}
+let sentence = "Learning JavaScript is fun!";
+let extracted = sentence.slice(0,0);
 
-const { name, ...rest } = person
-
-console.log(name)
-console.log(rest)
+console.log(extracted);

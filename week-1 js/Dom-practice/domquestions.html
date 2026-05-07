@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <!--1.use querySelectorAll to select all buttons with class ".buy-now"  
+    <button class="buy-now">buy now</button>
+    <button class="click">click me</button>
+    <button class="cart">add to cart</button>
+    <button class="buy-now">buy now</button>
+    <script>
+        let button = document.querySelectorAll(".buy-now")
+        console.log(button)
+    </script>
+    -->
+
+
+
+    <!--2.Select the heading of a page by ID and change its text to "Welcome to sheriyans!"
+
+    <h1 id="kk">Hello! How are you</h1>
+    <p style="font-family: 'Times New Roman', Times, serif;font-size: 25px;">
+        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Optio, earum quam nobis praesentium officia rem eaque architecto quas debitis saepe eius, deserunt at recusandae? Velit numquam nulla saepe, laboriosam ea voluptatem ipsa commodi incidunt quod obcaecati exercitationem consequuntur quis quam. Repellendus consectetur vero molestias, et magni rem minima asperiores tempora, ipsum aut quaerat at maxime explicabo pariatur fugiat laboriosam nam vitae tempore sit. Unde excepturi dolor quis, hic, aut fugit sed accusamus animi quia vitae molestiae soluta dolorem quidem maiores rerum odit quo inventore laborum ipsum iusto odio ad, beatae aliquam rem! Fugiat blanditiis ullam suscipit accusamus, recusandae vero ipsum.
+    </p>
+    <script>
+        let h1 = document.getElementById("kk");
+        h1.textContent = "Welcome to Code grind"
+    </script>
+    -->
+
+
+
+    <!-- 3.Select all <li> elements and print their text using a loop.
+
+    <ul>
+        <li>first</li>
+        <li>second</li>
+        <li>third</li>
+        <li>fourth</li>
+    </ul>
+    <script>
+        let li = document.querySelectorAll("li")
+        li.forEach((val) => console.log(val.textContent))
+    </script>
+    -->
+
+
+
+    <!-- 4.Select a paragraph and replace its content with: 
+     <b> Updated </b> by javaScript
+     
+     <p></p>
+     <script>
+        let para = document.querySelector("p");
+        para.innerHTML = "<b> Updated </b> by JavaScript"
+     </script>
+     -->
+
+
+
+     <!--5.How do you get the src of an image using JavaScript?
+
+     <img src="https://images.unsplash.com/photo-1777329857343-a6986c2fb103?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw3fHx8ZW58MHx8fHx8" alt="image">
+     <script>
+        let img = document.querySelector("img");
+        console.log(img.getAttribute("src"));
+                or
+        console.log(img.src);        
+     </script>
+     -->
+
+
+
+     <!-- 6.Select a link and update its href to point to https://www.google.com
+
+     <a href="https://www.instagram.com">click me</a>
+     <script>
+        let a = document.querySelector("a")
+        a.setAttribute("href", "https://www.google.com")
+     </script>
+     -->
+
+
+
+
+     <!-- 7.Remove a disable attribute from a button
+      <button disabled>click me</button>
+      <script>
+        let bt = document.querySelector("button")
+        bt.removeAttribute("disabled")
+      </script>
+      -->
+
+
+
+
+    <!-- 8.HOw to createElement and what's returned
+    <div></div>
+    <script>
+        let h1 = document.createElement("h1");
+        h1.textContent = "This is the end";
+        document.querySelector("div").append(h1)
+    </script>
+    -->
+
+
+
+    <!-- 9.Can you remove an element using removeChild() 
+    <ul>
+        <li>dslkfjk</li>
+        <li>nvsn</li>
+        <li>lskfla</li>
+    </ul>
+    <script>
+        let ul = document.querySelector("ul")
+        let li = document.querySelector("li")
+        ul.removeChild(li)
+        
+    </script>
+    -->
+
+
+
+
+    <!-- 10.Create a new List item <li> New Task </li> and add it to the end of a <ul>
+        Note: same as 8ht problem-->
+
+    
+
+    <!-- 11.Create a new image element with a  placeholder source and add it at the top of a div. 
+    <div>
+        <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Esse, voluptatum error magnam inventore fuga beatae eveniet tempore et omnis, ab repellat doloribus aliquid!</p>
+        <h1>akdfjfkls</h1>
+    </div>
+    <script>
+        let img = document.createElement("img")
+        img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAMFBMVEX4+frK1uPb4+vX4Onh5+7l6/D7/Pz3+Prz9ffP2uXr7/Pn7PHR2+bv8vXZ4erH1OEf24uvAAACQ0lEQVR4nO3b25KjIBRAUVE8xGv//98OaMbuJBhFk2pOeq+nvFDFLmIuiEUBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMiJpPnt6SaSoS5T1YOeSmkbc0SvpVFKP9vKpqr8KKsiMQSWLn2q4kYlia0x3bF5Sm3M8OLZvIE0xxfCL3+f/yL6JTw+2GlYRGvG48sglalfOJe3kPHUHK0pXzaVNzm5Cr4w9wuRwg0UZoDCDRRmYGehVF/RHy8fVDh+euEaCjNA4QYKM0DhBgozsFIohSv27NxrLXS2N8Y05faets5C6ZZ9+3FruMrCsAfe1Bfn2sq/cM+HaywUu+zVyxBLlOIyFP+zFBaGwHqZ9OUh0dnpPlV/HaSv8DbwIVHa5RJtpn9T6grvA+8Sw62YpnMiF//CtKKv8DHwJjEELkH9lKisMBb4IzEEft+m8gN9oq7CeOCSeBs4Jw61psK1wGvifeCcWCkqXA+cEvuHwDlRT+GzwCkx1hIStRQ+D5zfqPHRSgq3AmO/biZaPku3A9cSlRTuCVxJ1FHY7QqMJ+oo7PcFRhN1FDY7A2OJOgp3B0a+NHQUphz6utydoNJR2J0YrqPwb+4I70VhBijcQGEGZDT2xHAF50vPrYKGM8J/4Jx3ce6sfpP7Zeh18/78AeFGY/vi2bxD+Hdhi/RGKUoFO22TedvT1olGDZulV9Ide3atOfju/hWtHas0o9XUFyQ+QqruIVIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+HD/AF7EE7a/Mq+cAAAAAElFTkSuQmCC"
+        document.querySelector("div").prepend(img)
+    </script>
+    -->
+
+
+
+    <!-- Add a highlight class to every even item in a list
+     <ul>
+        <li>firsy</li>
+        <li>second</li>
+        <li>third</li>
+        <li>fourth</li>
+     </ul>
+     <style>
+        .high{
+            color: rgb(113, 18, 230);
+            font-family: Georgia, 'Times New Roman', Times, serif;
+        }
+     </style>
+     <script>
+        let ul = document.querySelectorAll("ul li:nth-child(2n)")
+        ul.forEach((n) => n.classList.add("high"))
+        /*for (let i = 0; i < ul.length; i++) {
+            if(i%2 == 1){
+                ul[i].classList.add("high")
+            }
+        }*/
+
+     </script>
+     -->
+
+</body>
+</html>
