@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Angkor&display=swap" rel="stylesheet">
+    <style>
+    
+      * {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        box-sizing: border-box;
+        font-family: "Angkor", serif;
+        font-weight: 400;
+        font-style: normal;
+        
+      }
+      .main {
+        
+      }
+      body {
+        background-color: #25262b;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      .input{
+        display: none;
+      }
+
+      .btn{
+        padding: 12px 20px;
+        background-color: rgb(40, 53, 53);
+        border-radius: 5px;
+        color: aliceblue;
+        font-size: 2rem;
+      }
+      .btn:active{
+        background-color: rgb(44, 59, 59);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main">
+      <input class="input" type="file">
+    </div>
+    <button class="btn">
+        Choose file
+    </button>
+    <script>
+        let btn = document.querySelector(".btn");
+        let inp = document.querySelector(".input");
+        
+        btn.addEventListener("click", () => {
+            inp.click();
+        })
+        inp.addEventListener("change", (val) => {
+            file = val.target.files[0]
+            if(file){
+                btn.textContent = file.name
+            }
+        })
+    </script>
+  </body>
+</html>

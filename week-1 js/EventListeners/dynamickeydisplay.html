@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Key Displayer</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Angkor&display=swap" rel="stylesheet">
+    </head>
+    <style>
+        .h1 {
+            font-size: 20rem;
+            font-weight: 20;
+            color: #F5F5F5;
+            user-select: none;
+            position: relative;
+            top: 70px;
+        }
+        
+
+        *{
+            margin: 0;
+            padding: 0;
+            border: 0;
+            box-sizing:border-box ;
+            font-family: "Angkor", serif;
+            font-weight: 400;
+            font-style: normal;
+            background-color: #DFF1F1;
+            
+        }
+        .main{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+        }
+        body{
+            height: 100vh;
+        }   
+        
+    </style>
+    <body>
+        <div class="main">
+            <h1 class="h1">K</h1>
+        </div>
+        <script>
+            let h1 = document.querySelector("h1");
+            window.addEventListener("keydown",(val) =>{
+                if(val.key === " "){
+                    h1.textContent = "Space"
+            }else{
+                h1.textContent = `${val.key}`
+            }
+            })
+        </script>
+    </body>
+</html>

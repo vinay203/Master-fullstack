@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h3 id="h3">Select your course</h3>
+    <select name="Devices" id="">
+        <option selected disabled>Courses</option>
+        <option value="CSE">CSE</option>
+        <option value="DS">DS</option>
+        <option value="EEE">EEE</option>
+        <option value="ECE">ECE</option>
+    </select>
+    <script>
+        let select = document.querySelector("select")
+        let h3 = document.querySelector("#h3");
+        select.addEventListener("change",(e) => {
+            console.log(e.target.value);
+            h3.textContent = `You choose ${e.target.value}`
+        })
+    </script>
+</body>
+</html>
