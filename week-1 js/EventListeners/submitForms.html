@@ -47,15 +47,14 @@
       }
 
       .cards-container {
-        display: flex;
-        flex-direction: row;
+        display:flex;
+        /* flex-direction: row; */
         align-items: center;
         gap: 40px;
         overflow-x: auto;
         height: 100%;
         padding: 40px;
         scroll-behavior: smooth;
-        padding-left: 20px;
       }
 
       .cards-container::-webkit-scrollbar {
@@ -161,8 +160,6 @@
       form.addEventListener("submit", (e) => {
         e.preventDefault();
 
-        //document.querySelector(".container").style.justifyContent = "flex-start"
-
         let card = document.createElement("div");
         card.classList.add("card");
 
@@ -182,13 +179,18 @@
         card.append(profile, name, age, occ, text);
         document.querySelector(".cards-container").appendChild(card);
 
-        inp.forEach((val) => {
-          img.src = inp[0].value;
-          name.textContent = inp[1].value;
-          age.textContent = inp[2].value;
-          occ.textContent = inp[3].value;
-        });
+        img.src = inp[0].value;
+        name.textContent = inp[1].value;
+        age.textContent = inp[2].value;
+        occ.textContent = inp[3].value;
         text.textContent = textArea.value;
+
+        inp.forEach((val) => {
+          if(val.type !== "submit"){
+            val.value = "";
+            textArea.value = "";
+          }
+        });
       });
     </script>
   </body>
