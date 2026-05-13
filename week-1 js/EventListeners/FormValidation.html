@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font-family: "Satoshi", sans-serif;
+        font-size: 20px;
+        font-weight: 800;
+        box-sizing: border-box;
+      }
+      body,
+      html {
+        height: 100%;
+        width: 100%;
+      }
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+      .signup {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 30px;
+      }
+      .container {
+        min-height: 600px;
+        width: 500px;
+        background-color: #edeff2;
+        padding: 20px;
+        border: none;
+        border-radius: 20px;
+      }
+      label,
+      input {
+        display: block;
+        width: 100%;
+        margin-bottom: 5px;
+      }
+      .fname,
+      .em,
+      .psd,
+      .cpsd {
+        margin-bottom: 15px;
+      }
+      h1 {
+        font-size: 30px;
+      }
+      input {
+        border-radius: 10px;
+        padding: 12px;
+      }
+      label {
+        font-size: 22px;
+      }
+      #btn {
+        font-size: 20px;
+        margin-top: 30px;
+        margin-bottom: 10px;
+        width: 100%;
+        padding: 12px;
+        border: 2px solid orange;
+        background-color: #ffedd6;
+        color: orange;
+        font-weight: 800;
+        cursor: pointer;
+      }
+      #btn:hover {
+        background-color: orange;
+        color: white;
+      }
+      small {
+        display: block;
+        font-size: 13px;
+        font-weight: 400;
+        color: red;
+      }
+
+      #confirmBox {
+        color: green;
+        text-align: center;
+      }
+      #eyeBtn,#eyeBtnc {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="signup">
+        <h1>Sign Up</h1>
+      </div>
+
+      <form action="">
+        <div class="fname">
+          <label for="fullName">Fullname</label>
+          <input type="text" id="fullName" placeholder="Enter your Fullname" />
+          <small id="errorFname"></small>
+        </div>
+
+        <div class="em">
+          <label for="email">Email</label>
+          <input type="email" id="email" placeholder="Enter your Email" />
+          <small id="errorEmail"></small>
+        </div>
+
+        <div class="psd">
+          <label for="password">Password</label>
+          <div style="position: relative">
+            <input
+              type="password"
+              id="password"
+              placeholder="Enter your Password"
+            />
+            <span id="eyeBtn" >👁️</span>
+          </div>
+          <small id="errorPsd"></small>
+        </div>
+
+        <div class="cpsd">
+          <label for="Cpassword">Confirm Password</label>
+          <div style="position: relative">
+            <input
+              type="password"
+              id="Cpassword"
+              placeholder="Enter your Password"
+            />
+            <span id="eyeBtnc" >👁️</span>
+          </div>
+          <small id="errorCPsd"></small>
+        </div>
+
+        <input type="submit" name="SignUp" value="SignUp" id="btn" />
+
+        <small id="confirmBox"></small>
+      </form>
+    </div>
+    <script>
+      let form = document.querySelector("form");
+      let Fullname = document.querySelector("#fullName");
+      let email = document.querySelector("#email");
+      let password = document.querySelector("#password");
+      let Cpassword = document.querySelector("#Cpassword");
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        let nameRegex = /^[a-zA-Z ]{3,}$/;
+        let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        let passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+        let isValid = true;
+
+        if (!nameRegex.test(Fullname.value)) {
+          document.querySelector("#errorFname").textContent =
+            "Name must be at least 3 characters";
+          isValid = false;
+        } else {
+          document.querySelector("#errorFname").textContent = "";
+        }
+
+        if (!emailRegex.test(email.value)) {
+          document.querySelector("#errorEmail").textContent =
+            "Please enter a valid email";
+          isValid = false;
+        } else {
+          document.querySelector("#errorEmail").textContent = "";
+        }
+
+        if (!passwordRegex.test(password.value)) {
+          document.querySelector("#errorPsd").textContent =
+            "Password must be at least 8 characters with 1 number";
+          isValid = false;
+        } else {
+          document.querySelector("#errorPsd").textContent = "";
+        }
+
+        if (password.value !== Cpassword.value) {
+          document.querySelector("#errorCPsd").textContent =
+            "Passwords do not match";
+          isValid = false;
+        } else {
+          document.querySelector("#errorCPsd").textContent = "";
+        }
+
+        if (isValid) {
+          document.querySelector("#confirmBox").textContent =
+            "You are SignedUp";
+        }else{
+            document.querySelector("#confirmBox").textContent ="";
+        }
+      });
+      let eyeBtn = document.querySelector("#eyeBtn");
+      let eyeBtnc = document.querySelector("#eyeBtnc");
+
+      eyeBtn.addEventListener("click", () => {
+        if (password.type === "password") {
+          password.type = "text";
+          eyeBtn.textContent = "🙈";
+        } else {
+          password.type = "password";
+          eyeBtn.textContent = "👁️";
+        }
+      });
+      eyeBtnc.addEventListener("click", () => {
+        if (Cpassword.type === "password") {
+          Cpassword.type = "text";
+          eyeBtnc.textContent = "🙈";
+        } else {
+          Cpassword.type = "password";
+          eyeBtnc.textContent = "👁️";
+        }
+        });
+    </script>
+  </body>
+</html>
