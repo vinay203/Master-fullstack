@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font-family: "Satoshi", sans-serif;
+        font-size: 40px;
+        font-weight: 800;
+      }
+      body,
+      html {
+        height: 100%;
+        width: 100%;
+      }
+      body {
+        padding: 50px;
+      }
+      input {
+        padding: 10px 5px;
+        font-size: 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <input type="text" />
+    <div class="char">
+      <h1>Total Characters left: <span></span></h1>
+    </div>
+    <script>
+        let inp = document.querySelector("input");
+        let span = document.querySelector("span");
+        inp.addEventListener("input", (e)=>{
+            let len = e.target.value.length;
+            span.textContent =  25 - len;
+            if (len > 25){
+                span.style.color = "red";
+            }else{
+                span.style.color = "black";
+            }
+        })
+    </script>
+  </body>
+</html>
