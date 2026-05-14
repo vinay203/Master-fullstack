@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dynamic Theme</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font-family: "Satoshi", sans-serif;
+        font-size: 20px;
+        font-weight: 800;
+        box-sizing: border-box;
+      }
+      body,
+      html {
+        height: 100%;
+        width: 100%;
+      }
+      .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: transparent;
+        height: 100vh;
+        flex-direction: column;
+      }
+      h1 {
+        font-size: 40px;
+        font-weight: 800;
+        padding: 30px;
+        margin-bottom: 20px;
+      }
+      .btn {
+        padding: 15px 35px;
+        font-size: 25px;
+        border-radius: 10px;
+        background-color: rgb(231, 227, 227);
+      }
+      .light {
+        background-color: #fff;
+        color: #1e1e1e;
+      }
+      .dark {
+        background-color: #1e1e1e;
+        color: #fefefe;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Theme Preferences</h1>
+      <button class="btn">Toggle</button>
+    </div>
+    <script>
+      let win = window.matchMedia("(prefers-color-scheme: dark)");
+      function darkOrLight() {
+        document.body.classList.remove("dark", "light");
+        if (win.matches) {
+          document.body.classList.add("dark");
+          localStorage.setItem("theme", "dark");
+        } else {
+          document.body.classList.add("light");
+          localStorage.setItem("theme", "light");
+        }
+      }
+
+      win.addEventListener("change", () => {
+        darkOrLight();
+      });
+
+      document.querySelector(".btn").addEventListener("click", () => {
+        if (localStorage.getItem("theme").includes("dark")) {
+          document.body.classList.remove("dark");
+          document.body.classList.add("light");
+          localStorage.setItem("theme", "light");
+        } else {
+          document.body.classList.remove("light");
+          document.body.classList.add("dark");
+          localStorage.setItem("theme", "dark");
+        }
+      });
+      if(localStorage.getItem("theme")){
+        document.body.classList.add(localStorage.getItem("theme"))
+      }else{
+        darkOrLight()
+      }
+    </script>
+  </body>
+</html>
