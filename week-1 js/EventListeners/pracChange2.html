@@ -60,7 +60,7 @@
             inp.click();
         })
         inp.addEventListener("change", (val) => {
-            file = val.target.files[0]
+            let file = val.target.files[0]
             if(file){
                 btn.textContent = file.name
             }
